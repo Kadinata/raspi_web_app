@@ -1,24 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import { ThemeProvider } from '@mui/material/styles';
+import { Box } from '@mui/material';
+import AuthProvider from './modules/auth/AuthProvider';
+import { HeartbeatProvider } from './modules/heartbeat';
+import Theme from './components/Theme';
+import AppRoutes from './routes';
+
+const useStyles = () => ({
+  canvas: {
+    display: 'flex',
+    minHeight: '100vh',
+    background: 'linear-gradient(to bottom right, #13547A, #80D0C7)',
+    color: '#E9E9E9',
+  },
+});
 
 function App() {
+
+  const styles = useStyles();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={Theme}>
+      <Box component="div" sx={styles.canvas}>
+        <AuthProvider>
+          <HeartbeatProvider enable>
+            <AppRoutes />
+          </HeartbeatProvider>
+        </AuthProvider>
+      </Box>
+    </ThemeProvider>
   );
 }
 
