@@ -14,6 +14,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { DisplayCard } from "../../components/Card";
 
+import createTestID from "../../modules/test_id/TestID";
+
+const test_id = createTestID('Error404');
+
 const makeStyles = (theme) => ({
   container: {
     marginLeft: 'auto',
@@ -60,6 +64,7 @@ const HomeButton = ({ onClick, ...props }) => (
     color="primary"
     startIcon={<HouseIcon />}
     onClick={() => onClick()}
+    data-testid={test_id('HomeButton')}
   >
     Go Home
   </Button>
@@ -77,7 +82,7 @@ const Error404 = (props) => {
         <DisplayCard title={<CardTitle title="Page Not Found 😕" />} >
 
           <Typography variant="h1">
-            <Box sx={styles.label}>
+            <Box sx={styles.label} data-testid={test_id('Label')}>
               404
             </Box>
           </Typography>
