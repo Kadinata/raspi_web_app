@@ -25,7 +25,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage --collectCoverageFrom='./src/**/*.js' --detectOpenHandles",
+    "test": "react-scripts test --coverage --collectCoverageFrom='./src/**/*.js' --detectOpenHandles --watchAll",
     "eject": "react-scripts eject"
   },
   "proxy": "http://raspberrypi.local:3000",
@@ -52,6 +52,7 @@
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
+    "jsonwebtoken": "^9.0.2",
     "react-test-renderer": "^18.2.0"
   }
 }

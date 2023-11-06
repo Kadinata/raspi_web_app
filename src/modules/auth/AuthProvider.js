@@ -13,7 +13,7 @@ const getInitialData = () => {
   return { user, token };
 };
 
-const useAuthState = (initialAuthData = {}) => {
+const useAuthState = (initialAuthData) => {
   const [authState, setAuthState] = React.useState({
     authCheckComplete: false,
     authData: initialAuthData,
@@ -56,8 +56,6 @@ const AuthProvider = (props) => {
     setAuthData(null, null);
   }
 
-  const onLogin = () => checkAuthState();
-
   const handleLogin = async (username, password) => {
     try {
       const result = await Auth.authenticateUser(username, password);
@@ -71,17 +69,13 @@ const AuthProvider = (props) => {
   const { user, token } = authData;
   const isAuthenticated = (!!user && !!token);
 
-  const authDataValue = { ...authData, isAuthenticated, authCheckComplete, onLogin, handleLogin, onLogout };
+  const authDataValue = { ...authData, isAuthenticated, authCheckComplete, handleLogin, onLogout };
   console.log('AuthProvider()', authData, { authCheckComplete });
   return (<AuthContext.Provider value={authDataValue} {...props} />);
 };
 
 export const useAuthDataContext = () => {
-  const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuthDataContext must be used within an AuthProvider.');
-  }
-  return context;
+  return React.useContext(AuthContext);
 }
 
 export const useAuthenticationState = () => {
@@ -90,8 +84,8 @@ export const useAuthenticationState = () => {
 };
 
 export const useAuthActions = () => {
-  const { onLogin, handleLogin, onLogout } = useAuthDataContext();
-  return { onLogin, handleLogin, onLogout };
+  const { handleLogin, onLogout } = useAuthDataContext();
+  return { handleLogin, onLogout };
 };
 
 export default AuthProvider;
