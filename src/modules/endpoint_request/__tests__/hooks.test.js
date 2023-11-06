@@ -1,4 +1,5 @@
 import { renderHook, act, cleanup } from '@testing-library/react';
+import create_endpoint_subsrciption_mock from '../../../../__mocks__/endpoint_subscription.mock';
 
 import { Hooks, Endpoint } from '..';
 
@@ -86,18 +87,8 @@ describe('Endpoint Hooks Tests', () => {
     const TEST_DATA = { data: 'some data' };
     const INITIAL_DATA = { initial_data: 'some initial data' };
 
-    let message_handler = () => null;
-
-    const mock_event_close = jest.fn();
-    const mock_endpoint_subscribe = jest.spyOn(Endpoint, 'subscribe').mockImplementation(
-      (endpoint, onMessage) => {
-        message_handler = onMessage;
-        return ({
-          close: () => mock_event_close,
-          onmessage: (data) => onMessage(data),
-        });
-      }
-    );
+    const mock_sub = create_endpoint_subsrciption_mock();
+    jest.spyOn(Endpoint, 'subscribe').mockImplementation(mock_sub.implementation);
 
     let hook;
 
@@ -107,14 +98,14 @@ describe('Endpoint Hooks Tests', () => {
 
     const { result, unmount } = hook;
 
-    expect(mock_endpoint_subscribe).toHaveBeenCalledTimes(1);
-    expect(mock_endpoint_subscribe.mock.calls[0][0]).toEqual(ENDPOINT_URL);
+    expect(mock_sub.implementation).toHaveBeenCalledTimes(1);
+    expect(mock_sub.implementation.mock.calls[0][0]).toEqual(ENDPOINT_URL);
 
     expect(result.current.data).toEqual(INITIAL_DATA);
     expectAccurateTimestamp(result.current.timestamp);
 
     /** Emit a test data and verify the data is stashed in the hook's internal state */
-    act(() => message_handler(TEST_DATA));
+    act(() => mock_sub.emit('message', TEST_DATA));
 
     expect(result.current.data).toEqual({ ...INITIAL_DATA, ...TEST_DATA });
     expectAccurateTimestamp(result.current.timestamp);
@@ -132,22 +123,9 @@ describe('Endpoint Hooks Tests', () => {
     ];
 
     let enable_stream = false;
-    let message_handler = () => null;
+    const mock_sub = create_endpoint_subsrciption_mock();
 
-    const mock_event_close = jest.fn();
-    const mock_endpoint_subscribe = jest.spyOn(Endpoint, 'subscribe').mockImplementation(
-      (endpoint, onMessage) => {
-        let closed = false
-        message_handler = (data) => (closed ? null : onMessage(data));
-        return ({
-          close: () => {
-            mock_event_close();
-            closed = true;
-          },
-          onmessage: (data) => onMessage(data),
-        });
-      }
-    );
+    jest.spyOn(Endpoint, 'subscribe').mockImplementation(mock_sub.implementation);
 
     let hook;
 
@@ -158,7 +136,7 @@ describe('Endpoint Hooks Tests', () => {
     });
 
     const { result, unmount } = hook;
-    expect(mock_endpoint_subscribe).toHaveBeenCalledTimes(0);
+    expect(mock_sub.implementation).toHaveBeenCalledTimes(0);
     expect(result.current.data).toEqual({});
     expectAccurateTimestamp(result.current.timestamp);
 
@@ -166,38 +144,38 @@ describe('Endpoint Hooks Tests', () => {
     enable_stream = true;
     await act(async () => hook.rerender(true));
 
-    expect(mock_endpoint_subscribe).toHaveBeenCalledTimes(1);
-    expect(mock_endpoint_subscribe.mock.calls[0][0]).toEqual(ENDPOINT_URL);
+    expect(mock_sub.implementation).toHaveBeenCalledTimes(1);
+    expect(mock_sub.implementation.mock.calls[0][0]).toEqual(ENDPOINT_URL);
   
     expect(result.current.data).toEqual({});
     expectAccurateTimestamp(result.current.timestamp);
 
     /** Emit a test data and verify the data is stashed in the hook's internal state */
-    act(() => message_handler(TEST_DATA[0]));
+    act(() => mock_sub.emit('message', TEST_DATA[0]));
 
     expect(result.current.data).toEqual(TEST_DATA[0]);
     expectAccurateTimestamp(result.current.timestamp);
 
-    expect(mock_event_close).toHaveBeenCalledTimes(0);
+    expect(mock_sub.get_event_handle().close).toHaveBeenCalledTimes(0);
 
     /** Disable the stream and force a re-render of the hook */
     enable_stream = false;
     await act(async () => hook.rerender(true));
-    expect(mock_event_close).toHaveBeenCalledTimes(1);
-    expect(mock_endpoint_subscribe).toHaveBeenCalledTimes(1);
+    expect(mock_sub.get_event_handle().close).toHaveBeenCalledTimes(1);
+    expect(mock_sub.implementation).toHaveBeenCalledTimes(1);
 
     /** Internal data should not update when the steam is disabled */
-    act(() => message_handler(TEST_DATA[1]));
+    act(() => mock_sub.emit('message', TEST_DATA[1]));
     expect(result.current.data).toEqual(TEST_DATA[0]);
 
     /** Enable the stream and re-render the hook */
     enable_stream = true;
     await act(async () => hook.rerender(true));
-    expect(mock_endpoint_subscribe).toHaveBeenCalledTimes(2);
+    expect(mock_sub.implementation).toHaveBeenCalledTimes(2);
 
     /** Emit a new test data and verify the hook's internal state is updated */
     expect(result.current.data).toEqual(TEST_DATA[0]);
-    act(() => message_handler(TEST_DATA[1]));
+    act(() => mock_sub.emit('message', TEST_DATA[1]));
     expect(result.current.data).toEqual(TEST_DATA[1]);
 
     unmount();
