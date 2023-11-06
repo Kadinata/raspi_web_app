@@ -14,22 +14,16 @@ const serializeRequests = async ({ ...endpoints }) => {
   return result;
 };
 
-const initializeDataState = (initialData) => {
-  const timestamp = 0;
-  const data = initialData || {};
-  return { timestamp, data };
-};
-
 const updateDataState = (prevData, newData) => {
-  const timestamp = Date.now();
   const data = { ...prevData, ...newData };
-  return { timestamp, data };
+  return { data };
 };
 
 export const useDataRequest = (endpoints) => {
 
-  const [dataState, setDataState] = React.useState(initializeDataState({}));
+  const [dataState, setDataState] = React.useState({data: {}});
   const [completed, setCompleted] = React.useState(false);
+  const [timestamp, setTimestamp] = React.useState(Date.now());
   const [error, setError] = React.useState(null);
 
   const fetchResource = React.useCallback(
@@ -41,6 +35,7 @@ export const useDataRequest = (endpoints) => {
       } catch (err) {
         setError(err);
       }
+      setTimestamp(Date.now());
       setCompleted(true);
     },
     [setDataState, setCompleted, setError, endpoints]
@@ -48,38 +43,33 @@ export const useDataRequest = (endpoints) => {
 
   React.useEffect(() => {
     fetchResource();
-    return () => console.log('cleaning up useDataRequest useEffect()');
   }, [fetchResource]);
 
-  return { ...dataState, completed, error };
+  return { ...dataState, timestamp, completed, error };
 };
 
 export const useStreamRequest = (endpoint, enable, initialData = {}) => {
 
   const [event, setEvent] = React.useState(null);
-  const [dataState, setDataState] = React.useState(initializeDataState(initialData));
+  const [dataState, setDataState] = React.useState({data: initialData});
+  const [timestamp, setTimestamp] = React.useState(Date.now());
 
   React.useEffect(() => {
     console.log({enable, event});
-    if (!enable || (event !== null)) {
-      return () => {
-        if (event) {
-          console.log('>>> event is still open; closing event');
-          event.close();
-        }
-      };
+    if (!enable) {
+      setEvent(null);
+      return;
     }
+
     const eventSource = Endpoint.subscribe(endpoint, (newData) => {
       setDataState(({ data }) => updateDataState(data, newData));
+      setTimestamp(Date.now());
     });
     setEvent(eventSource);
 
-    return () => {
-      console.log('>>> closing eventSource');
-      eventSource.close();
-    };
+    return () => eventSource.close();
   }, [enable, endpoint]);
 
-  return dataState;
+  return {...dataState, timestamp};
 };
 //===========================================================================

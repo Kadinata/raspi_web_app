@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mock_navigate,
 }));
 
-describe('404 Page Test', () => {
+describe('404 Page Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();

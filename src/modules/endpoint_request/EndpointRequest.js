@@ -5,7 +5,10 @@ const normalizePath = (path) => (`/${path}`);
 
 const get = async (endpoint) => {
   try {
-    const response = await fetch(normalizePath(endpoint), { credentials: 'include' });
+    const response = await fetch(normalizePath(endpoint), {
+      method: 'get',
+      credentials: 'include',
+    });
     const result = await response.json();
     return response.ok ? result : Promise.reject(result);
   } catch (err) {
@@ -36,7 +39,7 @@ const post = async (endpoint, data) => {
       body: JSON.stringify(data),
     });
     const result = await response.json();
-    return result;
+    return response.ok ? result : Promise.reject(result);
   } catch (err) {
     return Promise.reject(err);
   }
