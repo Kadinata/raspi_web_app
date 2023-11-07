@@ -21,11 +21,7 @@ const HeartbeatProvider = ({ enable, initialData = false, ...props }) => {
 };
 
 export const useHeartbeatContext = () => {
-  const context = React.useContext(HeartbeatContext);
-  if (context === undefined) {
-    throw new Error('useHeartbeatContext must be used within an HeartbeatProvider.');
-  }
-  return context;
+  return React.useContext(HeartbeatContext);
 };
 
 export default HeartbeatProvider;

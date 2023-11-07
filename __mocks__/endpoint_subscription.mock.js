@@ -28,7 +28,7 @@ export default create_endpoint_subsrciption_mock = () => {
       else if ((key === 'error') && (typeof mock_event_source.onerror === 'function')) {
         mock_event_source.onerror(value);
       }
-      else {
+      else if (typeof mock_event_source.onmessage === 'function') {
         mock_event_source.onmessage(value);
       }
     };
