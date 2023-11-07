@@ -5,11 +5,11 @@ import React from "react";
 import { Endpoint } from '../endpoint_request';
 import { useDataRequest } from '../endpoint_request/hooks';
 
-const SYSINFO_PATH = 'api/v1/sysinfo';
-const SYSINFO_STREAM_PATH = 'api/v1/sysinfo/stream';
+const SYSINFO_ENDPOINT = 'api/v1/sysinfo';
+const SYSINFO_STREAM_ENDPOINT = 'api/v1/sysinfo/stream';
 
 const endpoints = {
-  sysInfoData: SYSINFO_PATH,
+  sysInfoData: SYSINFO_ENDPOINT,
 };
 
 export const useSysInfo = () => {
@@ -27,31 +27,21 @@ export const useSysInfoStream = ({ enable, initialData = {} }) => {
 
   React.useEffect(() => {
     console.log('useSysInfo', {enable, event});
-    if (!enable || (event !== null)) return () => {if (event) {
-      console.log('> closing eventsource');
-      event.close();
-    }};
-    // console.log('useSysInfo', {enable, event});
-    const eventSource = Endpoint.subscribe(SYSINFO_STREAM_PATH, (data) => {
+    if (!enable) {
+      setEvent(null);
+      return;
+    }
 
-      // console.log('sysinfo stream data:', {data});
+    const eventSource = Endpoint.subscribe(SYSINFO_STREAM_ENDPOINT, (data) => {
 
       const { uptime } = data;
-
       if (typeof uptime !== 'undefined') {
         setTimeData((prevData) => ({ ...prevData, ...data }));
       } else {
         setData((prevData) => ({ ...prevData, ...data }));
       }
-      
     });
 
-    eventSource.onopen = (event) => {
-      console.log('>> event source opened', event);
-    }
-    eventSource.onerror = (event) => {
-      console.log('>> event source errored', event);
-    }
     setEvent(eventSource);
 
     return () => {

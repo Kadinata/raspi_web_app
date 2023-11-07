@@ -103,7 +103,7 @@ describe('Heartbeat Hook Tests', () => {
   });
 
   /** 
-   * Test disconnect handling. The connection status should update to the disconnect state when the subscription errors.
+   * Test cleanup handling. The hook should stop the subscription by closing the event source.
    */
   test('useHeartbeatStatus should close the internal event source when during cleanup', async () => {
     let enable = true;
@@ -133,8 +133,7 @@ describe('Heartbeat Hook Tests', () => {
   });
 
   /** 
-   * Test the hook's behavior when it's disabled. It should not update the connection status
-   * while disabled.
+   * Test the hook's behavior when it's disabled. It should stop updating when disabled.
    */
   test('useHeartbeatStatus should not update status when disabled', async () => {
     let enable = true;

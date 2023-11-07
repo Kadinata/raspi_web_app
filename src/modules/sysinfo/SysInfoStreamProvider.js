@@ -19,19 +19,11 @@ const SysInfoStreamProvider = ({ enable, initialData = {}, ...props }) => {
 };
 
 export const useTimeStreamContext = () => {
-  const context = React.useContext(SysInfoTimeStreamContext);
-  if (context === undefined) {
-    throw new Error('useTimeStreamContext must be used within an SysInfoStreamProvider.');
-  }
-  return context;
+  return React.useContext(SysInfoTimeStreamContext);
 }
 
 export const useDataStreamContext = () => {
-  const context = React.useContext(SysInfoDataStreamContext);
-  if (context === undefined) {
-    throw new Error('useDataStreamContext must be used within an SysInfoStreamProvider.');
-  }
-  return context;
+  return React.useContext(SysInfoDataStreamContext);
 }
 
 export default SysInfoStreamProvider;
