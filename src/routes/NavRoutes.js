@@ -4,7 +4,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faColumns,
   faMicrochip,
   faChartColumn,
 } from '@fortawesome/free-solid-svg-icons';
