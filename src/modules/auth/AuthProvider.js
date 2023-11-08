@@ -74,9 +74,7 @@ const AuthProvider = (props) => {
   return (<AuthContext.Provider value={authDataValue} {...props} />);
 };
 
-export const useAuthDataContext = () => {
-  return React.useContext(AuthContext);
-}
+export const useAuthDataContext = () => React.useContext(AuthContext);
 
 export const useAuthenticationState = () => {
   const { user, token, isAuthenticated, authCheckComplete } = useAuthDataContext();

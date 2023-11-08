@@ -18,13 +18,8 @@ const SysInfoStreamProvider = ({ enable, initialData = {}, ...props }) => {
   );
 };
 
-export const useTimeStreamContext = () => {
-  return React.useContext(SysInfoTimeStreamContext);
-}
-
-export const useDataStreamContext = () => {
-  return React.useContext(SysInfoDataStreamContext);
-}
+export const useTimeStreamContext = () => React.useContext(SysInfoTimeStreamContext);
+export const useDataStreamContext = () => React.useContext(SysInfoDataStreamContext);
 
 export default SysInfoStreamProvider;
 //===========================================================================

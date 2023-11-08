@@ -13,13 +13,7 @@ const GpioControlStateProvider = (props) => {
   );
 };
 
-export const useGpioControlStateContext = () => {
-  const context = React.useContext(GpioControlStateContext);
-  if (context === undefined) {
-    throw new Error('useGpioControlStateContext must be used within an GpioControlStateContext.');
-  }
-  return context;
-};
+export const useGpioControlStateContext = () => React.useContext(GpioControlStateContext);
 
 export const useGpioControlSubmit = () => {
   const { handleSubmit, disableSubmit } = useGpioControlStateContext();

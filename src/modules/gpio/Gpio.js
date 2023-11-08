@@ -8,12 +8,12 @@ import { useDataRequest } from '../endpoint_request/hooks';
 const FLAG_PIN_OENABLE = (0x1 << 1);
 const FLAG_PIN_HIGH = (0x1 << 0);
 
-const GPIO_DATA_PATH = 'api/v1/gpio';
-const USABLE_PINS_PATH = 'api/v1/gpio/usable_pins';
+const GPIO_DATA_ENDPOINT = 'api/v1/gpio';
+const USABLE_PINS_ENDPOINT = 'api/v1/gpio/usable_pins';
 
 const endpoints = {
-  gpioState: GPIO_DATA_PATH,
-  usablePins: USABLE_PINS_PATH,
+  gpioState: GPIO_DATA_ENDPOINT,
+  usablePins: USABLE_PINS_ENDPOINT,
 };
 
 const _get_gpio_setting = (gpioControlState) => {
@@ -64,7 +64,7 @@ export const useGpioController = () => {
 
     try {
       console.log({ gpioSetting });
-      await Endpoint.post(GPIO_DATA_PATH, gpioSetting);
+      await Endpoint.post(GPIO_DATA_ENDPOINT, gpioSetting);
     } catch (err) {
       console.log({ err });
     }
@@ -72,5 +72,4 @@ export const useGpioController = () => {
 
   return { handleChange, handleSubmit, disableSubmit, controlState };
 };
-
 //===========================================================================

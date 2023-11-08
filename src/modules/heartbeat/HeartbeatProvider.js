@@ -20,9 +20,7 @@ const HeartbeatProvider = ({ enable, initialData = false, ...props }) => {
   );
 };
 
-export const useHeartbeatContext = () => {
-  return React.useContext(HeartbeatContext);
-};
+export const useHeartbeatContext = () => React.useContext(HeartbeatContext);
 
 export default HeartbeatProvider;
 //===========================================================================
