@@ -47,7 +47,7 @@ describe('Heartbeat Provider Tests', () => {
      */
     expect(connStatusElement.textContent).toEqual("false");
     expect(mock_sub.implementation).toHaveBeenCalledTimes(1);
-    expect(mock_use_auth_state).toHaveBeenCalledTimes(2);
+    expect(mock_use_auth_state).toHaveBeenCalledTimes(1);
 
     /** Emit the connection open event */
     act(() => mock_sub.emit('open', 'onopen'));

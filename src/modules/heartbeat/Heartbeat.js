@@ -8,13 +8,9 @@ const HEARTBEAT_ENDPOINT = 'api/v1/heartbeat';
 
 export const useHeartbeatStatus = ({ enable, initialData = false }) => {
   const [connectedStatus, setConnectedStatus] = React.useState(initialData);
-  const [event, setEvent] = React.useState(null);
 
   React.useEffect(() => {
-    if (!enable) {
-      setEvent(null);
-      return;
-    }
+    if (!enable) return;
 
     const eventSource = Endpoint.subscribe(HEARTBEAT_ENDPOINT, null);
 
@@ -28,15 +24,9 @@ export const useHeartbeatStatus = ({ enable, initialData = false }) => {
       setConnectedStatus(false);
     }
 
-    setEvent(eventSource);
-
-    return () => {
-      console.log('>> closing event source');
-      eventSource.close();
-    };
+    return () => eventSource.close();
   }, [enable]);
 
   return { connectedStatus };
 };
-
 //===========================================================================

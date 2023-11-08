@@ -23,17 +23,11 @@ export const useSysInfoStream = ({ enable, initialData = {} }) => {
 
   const [timeData, setTimeData] = React.useState({ uptime, localtime, startTime });
   const [data, setData] = React.useState(restData);
-  const [event, setEvent] = React.useState(null);
 
   React.useEffect(() => {
-    console.log('useSysInfo', {enable, event});
-    if (!enable) {
-      setEvent(null);
-      return;
-    }
+    if (!enable) return;
 
     const eventSource = Endpoint.subscribe(SYSINFO_STREAM_ENDPOINT, (data) => {
-
       const { uptime } = data;
       if (typeof uptime !== 'undefined') {
         setTimeData((prevData) => ({ ...prevData, ...data }));
@@ -42,12 +36,7 @@ export const useSysInfoStream = ({ enable, initialData = {} }) => {
       }
     });
 
-    setEvent(eventSource);
-
-    return () => {
-      console.log('>> closing event source');
-      eventSource.close();
-    };
+    return () => eventSource.close();
   }, [enable]);
 
   return { data, timeData };

@@ -50,22 +50,16 @@ export const useDataRequest = (endpoints) => {
 
 export const useStreamRequest = (endpoint, enable, initialData = {}) => {
 
-  const [event, setEvent] = React.useState(null);
   const [dataState, setDataState] = React.useState({data: initialData});
   const [timestamp, setTimestamp] = React.useState(Date.now());
 
   React.useEffect(() => {
-    console.log({enable, event});
-    if (!enable) {
-      setEvent(null);
-      return;
-    }
+    if (!enable) return;
 
     const eventSource = Endpoint.subscribe(endpoint, (newData) => {
       setDataState(({ data }) => updateDataState(data, newData));
       setTimestamp(Date.now());
     });
-    setEvent(eventSource);
 
     return () => eventSource.close();
   }, [enable, endpoint]);
