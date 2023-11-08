@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { PageContentController } from '../../components/PageContentController';
 import { useGpioInfo } from '../../modules/gpio/Gpio';
-import GpioControlStateProvider from '../../modules/gpio/GpioControlStateProvider';
+import GpioControllerProvider from '../../modules/gpio/GpioController';
 import GpioDataStreamProvider from '../../modules/gpio/GpioDataStreamProvider';
 import {
   GpioGridLayout,
@@ -25,14 +25,14 @@ const GpioInfo = (props) => {
 
   return (
     <PageContentController loading={!completed} error={error} data={gpioData} title={pageTitle}>
-      <GpioControlStateProvider>
+      <GpioControllerProvider>
         <GpioDataStreamProvider enable initialData={gpioState}>
           <Grid container item spacing={0} alignItems="stretch" justifyContent="space-between">
             <GpioTabLayout pinLayout={PinLayout} {...props} />
             <GpioGridLayout pinLayout={PinLayout} {...props} />
           </Grid>
         </GpioDataStreamProvider>
-      </GpioControlStateProvider>
+      </GpioControllerProvider>
     </PageContentController>
   );
 };

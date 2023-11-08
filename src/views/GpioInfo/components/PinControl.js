@@ -5,7 +5,7 @@ import {
   Typography,
   Checkbox,
 } from '@mui/material';
-import { useGpioControlState } from '../../../modules/gpio/GpioControlStateProvider';
+import { useGpioPinController } from '../../../modules/gpio/GpioController';
 import { useStyles } from './styles';
 
 const _ID_USED = "used";
@@ -41,7 +41,7 @@ const usePinControlState = ({ pin, onChange }) => {
 const PinControl = ({ label, pinNum, ...props }) => {
 
   const styles = useStyles();
-  const { handleChange: onChange, pinControlstate: controlState } = useGpioControlState(pinNum);
+  const { handleChange: onChange, pinControlstate: controlState } = useGpioPinController(pinNum);
 
   const { handleChange } = usePinControlState({
     pin: pinNum,

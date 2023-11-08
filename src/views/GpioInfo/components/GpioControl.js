@@ -1,7 +1,7 @@
 import React from 'react';
 import { SubmitButton } from '../../../components/Button';
 import { PinControlHeader } from './PinRowHeaders';
-import { useGpioControlSubmit } from '../../../modules/gpio/GpioControlStateProvider';
+import { useGpioSubmissionController } from '../../../modules/gpio/GpioController';
 import PinControl from './PinControl';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -21,7 +21,7 @@ const useStyles = () => {
 
 const GpioSubmitButton = () => {
   const styles = useStyles();
-  const { handleSubmit, disableSubmit } = useGpioControlSubmit();
+  const { handleSubmit, disableSubmit } = useGpioSubmissionController();
 
   return (
     <SubmitButton
