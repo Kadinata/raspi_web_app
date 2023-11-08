@@ -78,6 +78,11 @@ const UserIcon = () => {
     onLogout();
   };
 
+  const handleNavigate = (path) => {
+    handleClose();
+    navigate(path);
+  }
+
   const navigate = useNavigate();
 
   if (!isAuthenticated && authCheckComplete) {
@@ -111,7 +116,7 @@ const UserIcon = () => {
         <MenuEntry
           icon={iconUserSettings}
           text="Account Settings"
-          onClick={() => navigate('/account/settings')}
+          onClick={() => handleNavigate('/account/settings')}
         />
         <MenuEntry icon={iconLogout} text={"Logout"} onClick={handleLogout} />
       </Menu>
