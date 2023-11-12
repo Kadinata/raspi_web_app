@@ -3,7 +3,11 @@ import { render, cleanup, waitFor, fireEvent } from "@testing-library/react";
 import AuthService from "../AuthService";
 import * as AuthUtils from '../AuthUtils';
 
-import AuthProvider, { useAuthenticationState, useAuthActions, useAuthDataContext } from "../AuthProvider";
+import AuthProvider, { 
+  useAuthStateContext,
+  useAuthActionContext,
+  useAuthDataContext 
+} from "../AuthProvider";
 
 const MOCK_USERNAME = 'someuser';
 const MOCK_PASSWORD = 'P@$$w0rD!';
@@ -15,8 +19,8 @@ const MOCK_USER_DATA = {
 };
 
 const TestChildComponent = () => {
-  const { user, token, isAuthenticated, authCheckComplete } = useAuthenticationState();
-  const { handleLogin, onLogout } = useAuthActions();
+  const { user, token, isAuthenticated, authCheckComplete } = useAuthStateContext();
+  const { handleLogin, onLogout } = useAuthActionContext();
 
   const [error, setError] = React.useState(null);
 
@@ -288,8 +292,8 @@ describe('Auth Provider Component and Auth Context Tests', () => {
   /** Verify auth context hooks throw errors when called outside of AuthProvider */
   test('auth context hooks should throw an error if called outside of AuthProvider', () => {
     expect(() => useAuthDataContext()).toThrow();
-    expect(() => useAuthenticationState()).toThrow();
-    expect(() => useAuthActions()).toThrow();
+    expect(() => useAuthStateContext()).toThrow();
+    expect(() => useAuthActionContext()).toThrow();
   });
 
 });

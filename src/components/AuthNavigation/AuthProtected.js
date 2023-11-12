@@ -3,11 +3,11 @@
 //===========================================================================
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthenticationState } from '../../modules/auth/AuthProvider';
+import { useAuthStateContext } from '../../modules/auth/AuthProvider';
 
 const AuthProtected = ({ children, redirect, ...rest }) => {
 
-  const { isAuthenticated, authCheckComplete } = useAuthenticationState();
+  const { isAuthenticated, authCheckComplete } = useAuthStateContext();
 
   if (!authCheckComplete) return null;
 

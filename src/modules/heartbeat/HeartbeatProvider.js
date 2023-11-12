@@ -3,12 +3,12 @@
 //===========================================================================
 import React from "react";
 import { useHeartbeatStatus } from "./Heartbeat";
-import { useAuthenticationState } from "../auth/AuthProvider";
+import { useAuthStateContext } from "../auth/AuthProvider";
 
 export const HeartbeatContext = React.createContext({});
 
 const HeartbeatProvider = ({ enable, initialData = false, ...props }) => {
-  const { isAuthenticated, authCheckComplete } = useAuthenticationState();
+  const { isAuthenticated, authCheckComplete } = useAuthStateContext();
   enable = enable && authCheckComplete && isAuthenticated;
 
   const { connectedStatus } = useHeartbeatStatus({ enable, initialData });

@@ -1,11 +1,11 @@
 //===========================================================================
 //  
 //===========================================================================
-import { useAuthActions } from '../../../modules/auth/AuthProvider';
+import { useAuthActionContext } from '../../../modules/auth/AuthProvider';
 
 const useLoginHandler = () => {
 
-  const { handleLogin } = useAuthActions();
+  const { handleLogin } = useAuthActionContext();
 
   const handleSubmit = async ({ username, password }) => {
     try {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthenticationState } from '../../modules/auth/AuthProvider';
+import { useAuthStateContext } from '../../modules/auth/AuthProvider';
 import Loading from '../Loading';
 
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
 const useAuthRedirect = (noRetry = false) => {
 
   const [state, setState] = React.useState(initialState);
-  const { isAuthenticated, authCheckComplete } = useAuthenticationState();
+  const { isAuthenticated, authCheckComplete } = useAuthStateContext();
 
   React.useEffect(() => {
     const loading = !authCheckComplete;

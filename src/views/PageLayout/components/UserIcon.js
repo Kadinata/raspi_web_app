@@ -18,8 +18,8 @@ import {
   faUserGear,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  useAuthenticationState,
-  useAuthActions,
+  useAuthStateContext,
+  useAuthActionContext,
 } from '../../../modules/auth/AuthProvider';
 
 const useStyles = () => {
@@ -69,8 +69,8 @@ const MenuEntry = React.forwardRef(({ icon, text, onClick, ...props }, ref) => {
 const UserIcon = () => {
 
   const styles = useStyles();
-  const { isAuthenticated, authCheckComplete } = useAuthenticationState();
-  const { onLogout } = useAuthActions();
+  const { isAuthenticated, authCheckComplete } = useAuthStateContext();
+  const { onLogout } = useAuthActionContext();
   const { anchorEl, handleClick, handleClose } = useUserIconMenu();
 
   const handleLogout = () => {

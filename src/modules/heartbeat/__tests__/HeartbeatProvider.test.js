@@ -28,7 +28,7 @@ describe('Heartbeat Provider Tests', () => {
     const mock_sub = create_endpoint_subsrciption_mock();
     jest.spyOn(Endpoint, 'subscribe').mockImplementation(mock_sub.implementation);
 
-    const mock_use_auth_state = jest.spyOn(AuthProvider, 'useAuthenticationState')
+    const mock_use_auth_state = jest.spyOn(AuthProvider, 'useAuthStateContext')
       .mockReturnValue(MOCK_AUTH_STATE);
 
     /** Render the provider component in the enabled state */
@@ -75,7 +75,7 @@ describe('Heartbeat Provider Tests', () => {
     const mock_sub = create_endpoint_subsrciption_mock();
     jest.spyOn(Endpoint, 'subscribe').mockImplementation(mock_sub.implementation);
 
-    const mock_use_auth_state = jest.spyOn(AuthProvider, 'useAuthenticationState')
+    const mock_use_auth_state = jest.spyOn(AuthProvider, 'useAuthStateContext')
       .mockReturnValue(MOCK_AUTH_STATE);
 
     /** Render the provider component in the enabled state */
