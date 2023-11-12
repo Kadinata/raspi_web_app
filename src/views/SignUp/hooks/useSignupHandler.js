@@ -1,18 +1,18 @@
 //===========================================================================
 //
 //===========================================================================
-import Auth from '../../../modules/auth/Auth';
+import AuthService from '../../../modules/auth/AuthService';
 
 const useSignupHandler = () => {
 
   const handleSubmit = async ({ username, password, confirmpw }) => {
-    var { success, error } =  Auth.validatePasswords(password, confirmpw);
+    var { success, error } =  AuthService.validatePasswords(password, confirmpw);
     if (!success) {
       return { success, error };
     }
 
     try {
-      let result = await Auth.createUser(username, password);
+      let result = await AuthService.createUser(username, password);
       return { success: result.success, error: { username: result.message } };
     } catch (err) {
       console.log({err});

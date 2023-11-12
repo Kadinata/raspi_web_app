@@ -2,7 +2,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { Endpoint } from "../../endpoint_request";
 
-import Auth from '../Auth';
+import AuthService from '../AuthService';
 
 const MOCK_USERNAME = 'someuser';
 const MOCK_PASSWORD = 'P@$$w0rD!';
@@ -40,7 +40,7 @@ describe('User Authentication Handling Tests', () => {
     const password = MOCK_PASSWORD;
     const mock_endpoint_post = jest.spyOn(Endpoint, 'post').mockResolvedValue(LOGIN_RESPONSE);
 
-    const result = await Auth.authenticateUser(username, password);
+    const result = await AuthService.authenticateUser(username, password);
     expect(mock_endpoint_post).toHaveBeenCalledTimes(1);
     expect(mock_endpoint_post).toHaveBeenCalledWith(EXPECTED_ENDPOINT, { username, password });
     expect(result).toEqual(EXPECTED_RESPONSE);
@@ -65,7 +65,7 @@ describe('User Authentication Handling Tests', () => {
     const password = MOCK_PASSWORD;
     const mock_endpoint_post = jest.spyOn(Endpoint, 'post').mockResolvedValue(REGISTER_RESPONSE);
 
-    const result = await Auth.createUser(username, password);
+    const result = await AuthService.createUser(username, password);
     expect(mock_endpoint_post).toHaveBeenCalledTimes(1);
     expect(mock_endpoint_post).toHaveBeenCalledWith(EXPECTED_ENDPOINT, { username, password });
     expect(result).toEqual(EXPECTED_RESPONSE);
@@ -78,7 +78,7 @@ describe('User Authentication Handling Tests', () => {
 
     const mock_endpoint_get = jest.spyOn(Endpoint, 'get').mockResolvedValue(MOCK_USER_DATA);
 
-    const result = await Auth.getUser();
+    const result = await AuthService.getUser();
     expect(mock_endpoint_get).toHaveBeenCalledTimes(1);
     expect(mock_endpoint_get).toHaveBeenCalledWith(EXPECTED_ENDPOINT);
     expect(result).toEqual(MOCK_USER_DATA.user);
@@ -103,7 +103,7 @@ describe('User Authentication Handling Tests', () => {
     const newPassword = MOCK_NEW_PASSWORD;
     const mock_endpoint_post = jest.spyOn(Endpoint, 'post').mockResolvedValue(UPDATE_PASSWORD_RESPONSE);
 
-    const result = await Auth.changePassword(currentPassword, newPassword);
+    const result = await AuthService.changePassword(currentPassword, newPassword);
     expect(mock_endpoint_post).toHaveBeenCalledTimes(1);
     expect(mock_endpoint_post).toHaveBeenCalledWith(EXPECTED_ENDPOINT, { currentPassword, newPassword });
     expect(result).toEqual(EXPECTED_RESPONSE);
@@ -113,37 +113,37 @@ describe('User Authentication Handling Tests', () => {
   test('should validate passwords correctly', () => {
 
     /** A password that is too short should fail validation */
-    let result = Auth.validatePasswords('pA$SwRd', 'pA$SwRd');
+    let result = AuthService.validatePasswords('pA$SwRd', 'pA$SwRd');
     expect(result.success).toEqual(false);
     expect(result.error.password).not.toEqual('');
     expect(result.error.confirmpw).toEqual('');
 
     /** A password without at least one uppercase character should fail validation */
-    result = Auth.validatePasswords('password1234!', 'password1234!');
+    result = AuthService.validatePasswords('password1234!', 'password1234!');
     expect(result.success).toEqual(false);
     expect(result.error.password).not.toEqual('');
     expect(result.error.confirmpw).toEqual('');
 
     /** A password without at least one number should fail validation */
-    result = Auth.validatePasswords('PASSword!', 'PASSword!');
+    result = AuthService.validatePasswords('PASSword!', 'PASSword!');
     expect(result.success).toEqual(false);
     expect(result.error.password).not.toEqual('');
     expect(result.error.confirmpw).toEqual('');
 
     /** A password without at least one special character should fail validation */
-    result = Auth.validatePasswords('PASSword1234', 'PASSword1234');
+    result = AuthService.validatePasswords('PASSword1234', 'PASSword1234');
     expect(result.success).toEqual(false);
     expect(result.error.password).not.toEqual('');
     expect(result.error.confirmpw).toEqual('');
 
     /** Password validation should fail if the passwords do not match */
-    result = Auth.validatePasswords(MOCK_PASSWORD, MOCK_NEW_PASSWORD);
+    result = AuthService.validatePasswords(MOCK_PASSWORD, MOCK_NEW_PASSWORD);
     expect(result.success).toEqual(false);
     expect(result.error.password).toEqual('');
     expect(result.error.confirmpw).not.toEqual('');
 
     /** Password validation should succeed if the passwords meet all of the criteria */
-    result = Auth.validatePasswords(MOCK_PASSWORD, MOCK_PASSWORD);
+    result = AuthService.validatePasswords(MOCK_PASSWORD, MOCK_PASSWORD);
     expect(result.success).toEqual(true);
     expect(result.error.password).toEqual('');
     expect(result.error.confirmpw).toEqual('');
@@ -158,7 +158,7 @@ describe('User Authentication Handling Tests', () => {
 
     let hook;
     await act(async () => {
-      hook = renderHook(() => Auth.useUserData()); 
+      hook = renderHook(() => AuthService.useUserData()); 
     });
 
     const {result, unmount} = hook;

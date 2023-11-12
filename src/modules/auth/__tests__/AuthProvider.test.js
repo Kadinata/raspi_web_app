@@ -1,6 +1,6 @@
 import React from "react";
 import { render, cleanup, waitFor, fireEvent } from "@testing-library/react";
-import Auth from "../Auth";
+import AuthService from "../AuthService";
 import * as AuthUtils from '../AuthUtils';
 
 import AuthProvider, { useAuthenticationState, useAuthActions, useAuthDataContext } from "../AuthProvider";
@@ -50,7 +50,7 @@ describe('Auth Provider Component and Auth Context Tests', () => {
   /** Test AuthProvider happy path */
   test('AuthProvider should provide AuthContext to child elements if authentication is successful', async () => {
 
-    const mock_auth_get_user = jest.spyOn(Auth, 'getUser').mockResolvedValue(MOCK_USER_DATA);
+    const mock_auth_get_user = jest.spyOn(AuthService, 'getUser').mockResolvedValue(MOCK_USER_DATA);
     const mock_get_auth_token = jest.spyOn(AuthUtils, 'getAuthToken').mockReturnValue(MOCK_TOKEN);
 
     const { getByTestId } = render(
@@ -88,7 +88,7 @@ describe('Auth Provider Component and Auth Context Tests', () => {
   /** Test AuthProvider error handling */
   test('AuthProvider should update to the unauthenticated state if there is an error', async () => {
 
-    const mock_auth_get_user = jest.spyOn(Auth, 'getUser').mockRejectedValue({ error: 'An induced error occurred' });
+    const mock_auth_get_user = jest.spyOn(AuthService, 'getUser').mockRejectedValue({ error: 'An induced error occurred' });
     const mock_get_auth_token = jest.spyOn(AuthUtils, 'getAuthToken').mockReturnValue(MOCK_TOKEN);
     const mock_remove_token = jest.spyOn(AuthUtils, 'removeToken').mockReturnValue(null);
 
@@ -117,7 +117,7 @@ describe('Auth Provider Component and Auth Context Tests', () => {
     expect(checkCompleteElement.textContent).toEqual('true');
 
     /** Verify the get user and token APIs have been called */
-    expect(mock_auth_get_user).toHaveBeenCalled();
+    expect(mock_auth_get_user).toHaveBeenCalledTimes(1);
     expect(mock_get_auth_token).toHaveBeenCalled();
     expect(mock_remove_token).toHaveBeenCalledTimes(1);
 
@@ -126,8 +126,8 @@ describe('Auth Provider Component and Auth Context Tests', () => {
 
   /** Test user login action */
   test('AuthProvider should update auth states correctly when the user successfully logs in', async () => {
-    const mock_auth_get_user = jest.spyOn(Auth, 'getUser').mockResolvedValueOnce(null).mockResolvedValueOnce(MOCK_USER_DATA);
-    const mock_auth_authenticate_user = jest.spyOn(Auth, 'authenticateUser').mockResolvedValue({ success: true });
+    const mock_auth_get_user = jest.spyOn(AuthService, 'getUser').mockResolvedValueOnce(null).mockResolvedValueOnce(MOCK_USER_DATA);
+    const mock_auth_authenticate_user = jest.spyOn(AuthService, 'authenticateUser').mockResolvedValue({ success: true });
     const mock_get_auth_token = jest.spyOn(AuthUtils, 'getAuthToken').mockReturnValue(MOCK_TOKEN);
 
     const { getByTestId } = render(
@@ -150,12 +150,12 @@ describe('Auth Provider Component and Auth Context Tests', () => {
     /** Wait for the auth check to complete */
     await waitFor(() => expect(checkCompleteElement.textContent).toEqual('true'));
 
-    /** Auth context should still be in the unauthenticated state because Auth.getUser() returns null */
+    /** Auth context should still be in the unauthenticated state because AuthService.getUser() returns null */
     expect(usernameElement.textContent).toEqual('');
     expect(isAuthElement.textContent).toEqual('false');
     expect(checkCompleteElement.textContent).toEqual('true');
 
-    /** Verify Auth.getUser() has been called but Auth.authenticateUser() has not */
+    /** Verify AuthService.getUser() has been called but AuthService.authenticateUser() has not */
     expect(mock_auth_get_user).toHaveBeenCalledTimes(1);
     expect(mock_auth_authenticate_user).toHaveBeenCalledTimes(0);
     expect(mock_get_auth_token).toHaveBeenCalled();
@@ -172,7 +172,7 @@ describe('Auth Provider Component and Auth Context Tests', () => {
     expect(isAuthElement.textContent).toEqual('true');
     expect(checkCompleteElement.textContent).toEqual('true');
 
-    /** Verify both Auth.getUser() and Auth.authenticateUser() have been called accordingly */
+    /** Verify both AuthService.getUser() and AuthService.authenticateUser() have been called accordingly */
     expect(mock_auth_get_user).toHaveBeenCalledTimes(2);
     expect(mock_auth_authenticate_user).toHaveBeenCalledTimes(1);
 
@@ -181,7 +181,7 @@ describe('Auth Provider Component and Auth Context Tests', () => {
 
   /** Test user logout action */
   test('AuthProvider should update auth states correctly when the user logs out', async () => {
-    jest.spyOn(Auth, 'getUser').mockResolvedValue(MOCK_USER_DATA);
+    jest.spyOn(AuthService, 'getUser').mockResolvedValue(MOCK_USER_DATA);
     jest.spyOn(AuthUtils, 'getAuthToken').mockReturnValue(MOCK_TOKEN);
     const mock_remove_token = jest.spyOn(AuthUtils, 'removeToken').mockReturnValue(null);
 
@@ -235,8 +235,8 @@ describe('Auth Provider Component and Auth Context Tests', () => {
 
     const ERROR_MESSAGE = 'An induced error occurred';
 
-    const mock_auth_get_user = jest.spyOn(Auth, 'getUser').mockResolvedValue(null)
-    const mock_auth_authenticate_user = jest.spyOn(Auth, 'authenticateUser').mockRejectedValue({ error: ERROR_MESSAGE });
+    const mock_auth_get_user = jest.spyOn(AuthService, 'getUser').mockResolvedValue(null)
+    const mock_auth_authenticate_user = jest.spyOn(AuthService, 'authenticateUser').mockRejectedValue({ error: ERROR_MESSAGE });
     const mock_get_auth_token = jest.spyOn(AuthUtils, 'getAuthToken').mockReturnValue(MOCK_TOKEN);
 
     const { getByTestId } = render(
@@ -259,13 +259,13 @@ describe('Auth Provider Component and Auth Context Tests', () => {
     /** Wait for the auth check to complete */
     await waitFor(() => expect(checkCompleteElement.textContent).toEqual('true'));
 
-    /** Auth context should still be in the unauthenticated state because Auth.getUser() returns null */
+    /** Auth context should still be in the unauthenticated state because AuthService.getUser() returns null */
     expect(errorElement.textContent).toEqual('');
     expect(usernameElement.textContent).toEqual('');
     expect(isAuthElement.textContent).toEqual('false');
     expect(checkCompleteElement.textContent).toEqual('true');
 
-    /** Verify Auth.getUser() has been called but Auth.authenticateUser() has not */
+    /** Verify AuthService.getUser() has been called but AuthService.authenticateUser() has not */
     expect(mock_auth_get_user).toHaveBeenCalledTimes(1);
     expect(mock_auth_authenticate_user).toHaveBeenCalledTimes(0);
     expect(mock_get_auth_token).toHaveBeenCalled();

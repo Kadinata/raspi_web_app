@@ -2,7 +2,7 @@
 //  
 //===========================================================================
 import React from 'react';
-import Auth from './Auth';
+import AuthService from './AuthService';
 import { getAuthToken, removeToken } from './AuthUtils';
 
 export const AuthContext = React.createContext(null);
@@ -38,7 +38,7 @@ const AuthProvider = (props) => {
   const checkAuthState = React.useCallback(async () => {
     const token = getAuthToken();
     try {
-      const user = await Auth.getUser();
+      const user = await AuthService.getUser();
       setAuthData(user, token);
     } catch (err) {
       removeToken();
@@ -47,7 +47,6 @@ const AuthProvider = (props) => {
   }, []);
 
   React.useEffect(() => {
-    console.log('useEffect() -> checkAuthState');
     checkAuthState();
   }, [checkAuthState]);
 
@@ -58,7 +57,7 @@ const AuthProvider = (props) => {
 
   const handleLogin = async (username, password) => {
     try {
-      const result = await Auth.authenticateUser(username, password);
+      const result = await AuthService.authenticateUser(username, password);
       checkAuthState();
       return result;
     } catch (err) {

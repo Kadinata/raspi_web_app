@@ -1,18 +1,18 @@
 //===========================================================================
 //
 //===========================================================================
-import Auth from '../../../modules/auth/Auth';
+import AuthService from '../../../modules/auth/AuthService';
 
 const useChangePasswordHandler = () => {
 
   const handleSubmit = async ({ currentPassword, newPassword, confirmPassword }) => {
-    let { success, error } = Auth.validatePasswords(newPassword, confirmPassword);
+    let { success, error } = AuthService.validatePasswords(newPassword, confirmPassword);
     if (!success) {
       return { success, error };
     }
 
     try {
-      let { success, message } = await Auth.changePassword(currentPassword, newPassword);
+      let { success, message } = await AuthService.changePassword(currentPassword, newPassword);
       return { success, error: { message }};
     } catch (err) {
       console.log({ err });

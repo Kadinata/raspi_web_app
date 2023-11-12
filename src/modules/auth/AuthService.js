@@ -68,7 +68,7 @@ const useUserData = () => {
   return { user, error, completed };
 };
 
-const Auth = {
+const AuthService = {
   authenticateUser,
   createUser,
   getUser,
@@ -77,5 +77,5 @@ const Auth = {
   useUserData,
 };
 
-export default Auth;
+export default AuthService;
 //===========================================================================
