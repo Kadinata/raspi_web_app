@@ -7,7 +7,6 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import NavRoutes from './NavRoutes';
-import NavProvider from '../components/Nav';
 import { AuthProtected } from '../components/AuthNavigation';
 import { PageLayout } from '../views/PageLayout';
 import Login from '../views/Login';
@@ -94,13 +93,7 @@ const BrowserRouter = createBrowserRouter([
   },
 ]);
 
-const AppRoutes = (props) => {
-  return (
-    <NavProvider routes={NavRoutes}>
-      <RouterProvider router={BrowserRouter} />
-    </NavProvider>
-  );
-};
+const AppRoutes = () => (<RouterProvider router={BrowserRouter} />);
 
 export default AppRoutes;
 //===========================================================================
