@@ -1,43 +1,53 @@
+/**
+ * AuthRedirect: A container component that conditionally redirects
+ * depending on the current authentication status.
+ */
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStateContext } from '../../modules/auth/AuthProvider';
 import Loading from '../Loading';
 
-const initialState = {
-  loading: true,
-  loggedIn: false,
-  activated: false,
-};
+/**
+ * @private Internal custom hook to manage the state of the page
+ */
+const useRedirectState = (noRetry) => {
 
-const useAuthRedirect = (noRetry = false) => {
-
-  const [state, setState] = React.useState(initialState);
+  const [activated, setActivated] = React.useState(false);
   const { isAuthenticated, authCheckComplete } = useAuthStateContext();
 
   React.useEffect(() => {
-    const loading = !authCheckComplete;
-    const loggedIn = isAuthenticated;
-    const activated = (authCheckComplete && !isAuthenticated && noRetry);
-    setState((prevState) => ({
-      ...prevState,
-      loading,
-      loggedIn,
-      activated: prevState.activated || activated,
-    }));
-  }, [isAuthenticated, authCheckComplete, noRetry]);
+    setActivated((prevState) => (prevState || (authCheckComplete && !isAuthenticated && noRetry)));
+  }, [isAuthenticated, authCheckComplete, noRetry, setActivated]);
 
-  return state;
+  const loading = !authCheckComplete;
+  const shouldRedirect = authCheckComplete && isAuthenticated && !activated;
+
+  return {loading, shouldRedirect};
 };
 
+/**
+ * The opposite of the AuthProtected component. This component does not
+ * render its children as long as the user remains authenticated. This
+ * compone is useful to prevent the login page from being rendered after
+ * the user successfully authenticates. This component must be used
+ * inside both AuthProvider and Router components.
+ * @param {string} redirect - URL of the page to redirect to while the user
+ * is authenticated.
+ * @param {boolean} noRetry - If set to true, the component will attempt to
+ * redirect only once.
+ */
 const AuthRedirect = ({ redirect, noRetry = false, ...rest }) => {
 
-  const { loading, loggedIn, activated } = useAuthRedirect(noRetry);
+  const navigate = useNavigate();
+  const { loading, shouldRedirect } = useRedirectState(noRetry);
 
-  if (loggedIn && !loading && !activated) {
-    return (<Navigate to={redirect} />);
+  if (shouldRedirect) {
+    navigate(redirect);
+    return null;
   }
 
   return (<Loading show={loading} {...rest} />);
 };
 
 export default AuthRedirect;
+//===========================================================================
