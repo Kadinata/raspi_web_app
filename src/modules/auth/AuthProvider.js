@@ -12,7 +12,7 @@ import { useAuthState } from './useAuthState';
 export const AuthContext = React.createContext(null);
 
 /**
- * React Context Provider Element that provides authentication actions and state data. 
+ * React Context Provider Element that provides authentication actions and state data.
  * @param {any} props - React props to pass on to the returned context provider element.
  * @returns {Element} - React Context Provider element for authentication state and actions.
  */
