@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# Raspberry Pi Web App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the client component single-page application written in [React](https://react.dev/) and served by a [Node.js](http://nodejs.org/) server hosted on a Raspberry Pi. This web application needs the server component in order to function properly. 
 
-## Available Scripts
+The respository and setup instruction for the server can be found [here](https://github.com/Kadinata/raspi_web_server)
 
-In the project directory, you can run:
+![system informatio page](./doc/sysinfo.png)
+<div align="center">
+  <i>System Information Page</i>
+</div>
 
-### `npm start`
+## Installation & Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Install and setup the server component on the Raspberry Pi. (Instruction [here](https://github.com/Kadinata/raspi_web_server))
+2. Clone this repository, run `npm install` to install the dependencies.
+3. Create a production build with `npm run build`.
+4. Deploy the app into the `public` directory on the server.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Start the server and the application can be viewed at [raspberrypi.local:3000](http://raspberrypi.local:3000/)
 
-### `npm test`
+## Page Information
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### System Information Page
 
-### `npm run build`
+* Located at `/systems`. This page displays system information (i.e. uptime, core temperature, as well as CPU, memory, network, and storage usage information), which are periodically updated in real time.
+* This page is auth protected. The user must be logged in to view it.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### GPIO Information Page
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Located at `/gpio`. This page allows the user to view and control the state of the GPIO pins on the Raspberry Pi. Changes made to the state of one or more GPIO pins (e.g. by pressing a button) are displayed in real time on this page.
+* This page is auth protected. The user must be logged in to view it.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Login and Registration Page
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* The login page is self-explanatory and is located at `/login`
+* The register page (`/register`) creates a new user account needed to view the system information and gpio status pages.
