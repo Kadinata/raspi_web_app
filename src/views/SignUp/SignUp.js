@@ -5,13 +5,18 @@ import React from 'react';
 import {
   Grid,
   Container,
+  Box,
+  Typography,
+  Link,
 } from '@mui/material';
-import { Navigate } from 'react-router-dom';
-import SignupCard from './SignupCard';
+import { useNavigate } from 'react-router-dom';
+import SignupForm from './SignupForm';
 import { useSignupHandler } from './hooks';
 import { AuthRedirect } from '../../components/AuthNavigation';
+import { LogoCard } from '../../components/Logo';
+import { useTheme } from '@mui/material/styles';
 
-const useStyles = () => {
+const makeStyles = (theme) => {
   return ({
     container: {
       padding: 3,
@@ -20,6 +25,15 @@ const useStyles = () => {
       alignItems: 'flex-start',
       display: 'flex',
     },
+    container2: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    linkBar: {
+      paddingTop: 2,
+      color: theme.palette.text.secondary,
+    },
   });
 };
 
@@ -27,26 +41,38 @@ const DELAY_AFTER_SIGN_UP_MS = 850;
 const REDIRECT_AFTER_SIGNUP = '/login';
 const REDIRECT_IF_LOGGED_IN = '/';
 
+const LinkBar = ({ redirect }) => {
+
+  const styles = makeStyles(useTheme());
+  const navigate = useNavigate();
+
+  return (
+    <Box component="span" sx={styles.linkBar}>
+      <Typography component="span">Already have an account? </Typography>
+      <Link component="button" onClick={() => navigate(redirect)}>Login</Link>
+    </Box>
+  );
+};
+
 const SignupView = (props) => {
 
-  const styles = useStyles();
+  const styles = makeStyles(useTheme());
 
-  const [signupSucceeded, setSignupSucceeded] = React.useState(false);
   const { handleSubmit } = useSignupHandler();
+  const navigate = useNavigate();
 
   const handleSuccess = () => {
-    setTimeout(() => setSignupSucceeded(true), DELAY_AFTER_SIGN_UP_MS);
+    setTimeout(() => navigate(REDIRECT_AFTER_SIGNUP), DELAY_AFTER_SIGN_UP_MS);
   };
-
-  if (signupSucceeded) {
-    return (<Navigate to={REDIRECT_AFTER_SIGNUP} />);
-  }
 
   return (
     <AuthRedirect noRetry redirect={REDIRECT_IF_LOGGED_IN}>
       <Grid container sx={styles.container}>
-        <Container maxWidth="sm">
-          <SignupCard onSubmit={handleSubmit} onSuccess={handleSuccess} />
+        <Container maxWidth="sm" sx={styles.container2}>
+          <LogoCard title="Create User">
+            <SignupForm onSubmit={handleSubmit} onSuccess={handleSuccess} />
+          </LogoCard>
+          <LinkBar redirect={REDIRECT_AFTER_SIGNUP} />
         </Container>
       </Grid>
     </AuthRedirect>
